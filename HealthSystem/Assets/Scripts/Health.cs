@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class Health : MonoBehaviour
 {
     public UnityEvent onTakeDamage = new UnityEvent();
     public UnityEvent onRegenEvent = new UnityEvent();
+    public UnityEvent onDieEvent = new UnityEvent();
     
     [SerializeField] private int maxHealth;
     [SerializeField] private int startingHealth;
@@ -14,10 +16,20 @@ public class Health : MonoBehaviour
     private int _health;
 
 
+    private void Awake()
+    {
+        _health = startingHealth;
+    }
+
     public void TakeDamage(int damage)
     {
         this._health -= damage;
-        if (_health < 0) _health = 0;
+        if (_health <= 0)
+        {
+            _health = 0;
+            onDieEvent.Invoke();
+            Debug.Log("HealthSystem Died");
+        }
         
         onTakeDamage.Invoke();
     } 
@@ -28,5 +40,10 @@ public class Health : MonoBehaviour
         if (_health > maxHealth) _health = maxHealth;
         
         onRegenEvent.Invoke();
+    }
+
+    public int GetHealth()
+    {
+        return this._health;
     }
 }

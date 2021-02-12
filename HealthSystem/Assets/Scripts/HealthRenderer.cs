@@ -16,8 +16,13 @@ public class HealthRenderer : MonoBehaviour
         health.onRegenEvent.AddListener(UpdateUi);
     }
 
-    public void UpdateUi()
+    private void Start()
     {
-        
+        UpdateUi();
+    }
+
+    private void UpdateUi()
+    {
+        text.text = health.GetHealth().ToString();
     }
 }
